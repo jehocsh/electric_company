@@ -194,6 +194,17 @@ base_url('contact') ?>">Contact</a>
                         <a class="nav-link <?= (isset($page) && $page == 'register') ? 'active' : '' ?>" href="<?= 
 base_url('register') ?>">Register</a> 
                     </li> 
+                    <li class="nav-item ms-lg-2">
+                        <?php if (session()->get('isLogged') === true): ?>
+                            <a class="btn nav-portal-btn" href="<?= base_url('dashboard') ?>">
+                                <i class="fas fa-gauge-high me-2"></i>Dashboard
+                            </a>
+                        <?php else: ?>
+                            <a class="btn nav-portal-btn" href="<?= base_url() ?>#login">
+                                <i class="fas fa-user me-2"></i>Sign in
+                            </a>
+                        <?php endif; ?>
+                    </li>
                 </ul> 
             </div> 
         </div> 

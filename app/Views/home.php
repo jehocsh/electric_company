@@ -16,10 +16,65 @@ years.</p>
                     <a href="<?= base_url('contact') ?>" class="btn btn-outline-light btn-lg">Get Quote</a> 
                 </div> 
             </div> 
-            <div class="col-lg-6 text-center"> 
-                <div class="hero-image mt-5 mt-lg-0"> 
-                    <i class="fas fa-bolt" style="font-size: 15rem; color: rgba(255,255,255,0.1);"></i>
-                       </div> 
+            <div class="col-lg-5 offset-lg-1">
+                <div class="home-login-card mt-5 mt-lg-0" id="login">
+                    <div class="home-login-card__header">
+                        <span class="home-login-card__icon"><i class="fas fa-user-shield"></i></span>
+                        <div>
+                            <span class="home-login-card__eyebrow">Customer portal</span>
+                            <h2>Welcome back</h2>
+                        </div>
+                    </div>
+
+                    <?php if (session()->getFlashdata('error')): ?>
+                        <div class="alert alert-danger py-2" role="alert">
+                            <i class="fas fa-circle-exclamation me-2"></i><?= esc(session()->getFlashdata('error')) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success py-2" role="alert">
+                            <i class="fas fa-circle-check me-2"></i><?= esc(session()->getFlashdata('success')) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (session()->get('isLogged') === true): ?>
+                        <p class="home-login-card__intro">You are signed in as <strong><?= esc(session()->get('username')) ?></strong>.</p>
+                        <a href="<?= base_url('dashboard') ?>" class="btn btn-primary w-100">
+                            Open dashboard <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    <?php else: ?>
+                        <p class="home-login-card__intro">Sign in to manage customer accounts and service records.</p>
+                        <form action="<?= base_url('login') ?>" method="POST" class="home-login-form">
+                            <?= csrf_field() ?>
+                            <div class="mb-3">
+                                <label for="login-email" class="form-label">Email address</label>
+                                <div class="home-input-group">
+                                    <i class="fas fa-envelope"></i>
+                                    <input type="email" class="form-control" id="login-email" name="username"
+                                           value="<?= esc(old('username')) ?>" placeholder="name@example.com"
+                                           autocomplete="username" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="login-password" class="form-label">Password</label>
+                                <div class="home-input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" class="form-control" id="login-password" name="password"
+                                           placeholder="Enter your password" autocomplete="current-password" required>
+                                    <button class="password-toggle" type="button" aria-label="Show password"
+                                            aria-controls="login-password" data-password-toggle="login-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 home-login-submit">
+                                Sign in securely <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </form>
+                        <p class="home-login-card__footer">Need an account? <a href="<?= base_url('register') ?>">Register here</a></p>
+                    <?php endif; ?>
+                </div>
             </div> 
         </div> 
     </div> 

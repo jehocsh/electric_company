@@ -59,13 +59,13 @@ class Home extends BaseController
             return redirect()->to('/dashboard');
         }
 
-        return view('login');
+        return redirect()->to(base_url('/') . '#login');
     }
 
     public function dashboard()
     {
         if (session()->get('isLogged') !== true) {
-            return redirect()->to('/login');
+            return redirect()->to(base_url('/') . '#login');
         }
 
         $customerModel = new CustomerAccountModel();
@@ -208,6 +208,6 @@ public function createAccount()
         }
 
         session()->destroy();
-        return redirect()->to('/login')->with('success', 'You have been logged out.');
+        return redirect()->to(base_url('/') . '#login')->with('success', 'You have been logged out.');
     }
 }

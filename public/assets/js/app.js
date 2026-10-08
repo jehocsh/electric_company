@@ -77,7 +77,7 @@ initNavigationEffects();
         // Password strength indicator 
         const passwordInputs = document.querySelectorAll('input[type="password"]'); 
         passwordInputs.forEach(input => { 
-            if (input.name === 'password') { 
+            if (input.name === 'password' && !input.closest('.home-login-form')) {
                 input.addEventListener('input', function() { 
                     const strength = calculatePasswordStrength(this.value); 
                     updatePasswordStrengthIndicator(this, strength); 
@@ -286,6 +286,20 @@ strengthLevels[0]}</small>
             behavior: 'smooth' 
         }); 
     }); 
+
+    // Accessible password visibility controls.
+    document.querySelectorAll('[data-password-toggle]').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = document.getElementById(this.dataset.passwordToggle);
+            if (!input) return;
+
+            const isVisible = input.type === 'text';
+            input.type = isVisible ? 'password' : 'text';
+            this.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+            const icon = this.querySelector('i');
+            if (icon) icon.className = isVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+    });
      
     // Console welcome message 
     console.log('%cPowerFlow Electric', 'color: #1e40af; font-size: 24px; font-weight: bold;'); 
@@ -298,4 +312,4 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('load', function() { 
 // navigator.serviceWorker.register('/sw.js'); 
 }); 
-} 
+}

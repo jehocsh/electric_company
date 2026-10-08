@@ -3,78 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Puihaha Electric Company</title>
+    <title>Admin Dashboard - Puihaha Electric</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px 0; }
-        .main-container { background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 30px; margin: 20px auto; }
-        .header-section { text-align: center; margin-bottom: 30px; position: relative; }
-        .header-section h1 { color: #667eea; font-weight: bold; }
-        .logout-form { position: absolute; top: 0; right: 0; }
-        .stats-card { border-radius: 10px; padding: 20px; margin-bottom: 20px; color: white; }
-        .stats-card h3 { font-size: 2rem; font-weight: bold; margin: 0; }
-        .stats-card p { margin: 5px 0 0 0; opacity: 0.9; }
-        .card-total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-active { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .card-inactive { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
-        .card-suspended { background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); }
-        .search-filter-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .badge-active { background-color: #28a745; }
-        .badge-inactive { background-color: #dc3545; }
-        .badge-suspended { background-color: #ffc107; color: #000; }
-        .pagination { margin-top: 20px; }
-        .pagination a, .pagination span { margin-right: 8px; }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <div class="main-container">
-            <!-- Header with Logout -->
-            <div class="header-section">
-                <h1><i class="bi bi-lightning-charge-fill text-warning"></i> Puihaha Electric Company</h1>
-                <p class="text-muted">Customer Account Management System | Logged in as <strong><?= esc($username) ?></strong></p>
-                <form action="<?= base_url('logout') ?>" method="post" class="logout-form">
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+<body class="dashboard-page">
+    <header class="dashboard-topbar">
+        <div class="container py-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <a class="dashboard-brand" href="<?= base_url() ?>">
+                <i class="fas fa-bolt me-2"></i>Puihaha Electric
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="dashboard-user d-none d-sm-inline">Signed in as <strong><?= esc($username) ?></strong></span>
+                <form action="<?= base_url('logout') ?>" method="post" class="m-0">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-sm btn-outline-light px-3">
+                        <i class="fas fa-arrow-right-from-bracket me-1"></i> Log out
+                    </button>
                 </form>
             </div>
+        </div>
+    </header>
+    <main class="container dashboard-content">
+        <div class="main-container">
+            <!-- Header with Logout -->
+            <div class="dashboard-heading d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+                <div>
+                    <span class="home-login-card__eyebrow">Admin portal</span>
+                    <h1 class="mb-1">Customer accounts</h1>
+                    <p class="mb-0">Monitor and manage every electric service account in one place.</p>
+                </div>
+                <a href="<?= base_url('account/create') ?>" class="btn btn-primary px-4">
+                    <i class="fas fa-plus me-2"></i>Add account
+                </a>
+            </div>
+
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success" role="alert"><i class="fas fa-circle-check me-2"></i><?= esc(session()->getFlashdata('success')) ?></div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger" role="alert"><i class="fas fa-circle-exclamation me-2"></i><?= esc(session()->getFlashdata('error')) ?></div>
+            <?php endif; ?>
 
             <!-- Statistics Cards -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="stats-card card-total">
-                        <h3><?= $total_accounts ?></h3>
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="dashboard-stat stat-total">
+                        <span class="dashboard-stat__icon"><i class="fas fa-users"></i></span>
+                        <h2><?= esc($total_accounts) ?></h2>
                         <p>Total Accounts</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="stats-card card-active">
-                        <h3><?= $active_accounts ?></h3>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="dashboard-stat stat-active">
+                        <span class="dashboard-stat__icon"><i class="fas fa-circle-check"></i></span>
+                        <h2><?= esc($active_accounts) ?></h2>
                         <p>Active Accounts</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="stats-card card-inactive">
-                        <h3><?= $inactive_accounts ?></h3>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="dashboard-stat stat-inactive">
+                        <span class="dashboard-stat__icon"><i class="fas fa-circle-pause"></i></span>
+                        <h2><?= esc($inactive_accounts) ?></h2>
                         <p>Inactive Accounts</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="stats-card card-suspended">
-                        <h3><?= $suspended_accounts ?></h3>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="dashboard-stat stat-suspended">
+                        <span class="dashboard-stat__icon"><i class="fas fa-triangle-exclamation"></i></span>
+                        <h2><?= esc($suspended_accounts) ?></h2>
                         <p>Suspended Accounts</p>
                     </div>
                 </div>
             </div>
 
-            <div class="mb-3 text-end">
-    <a href="<?= base_url('account/create') ?>" class="btn btn-success fw-bold">
-        <i class="bi bi-plus-lg"></i> Add New Account
-    </a>
-</div>
-
             <!-- Search and Filter Section -->
-            <div class="search-filter-section">
+            <div class="dashboard-panel dashboard-filter mb-4">
                 <form method="GET" action="<?= base_url('dashboard') ?>">
                     <div class="row g-3">
                         <div class="col-md-4">
@@ -97,21 +102,21 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Search</button>
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-magnifying-glass"></i> Search</button>
                         </div>
                     </div>
                 </form>
                 <?php if ($search_keyword || $filter_status || $filter_type): ?>
                     <div class="mt-2">
-                        <a href="<?= base_url('dashboard') ?>" class="btn btn-sm btn-secondary"><i class="bi bi-x-circle"></i> Clear Filters</a>
+                        <a href="<?= base_url('dashboard') ?>" class="btn btn-sm btn-outline-secondary"><i class="fas fa-xmark"></i> Clear Filters</a>
                     </div>
                 <?php endif; ?>
             </div>
 
             <!-- Customer Accounts Table -->
-            <div class="table-container table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-dark">
+            <div class="dashboard-panel p-0 overflow-hidden table-responsive">
+                <table class="table dashboard-table">
+                    <thead>
                         <tr>
                             <th>Account Number</th>
                             <th>Customer Name</th>
@@ -129,25 +134,25 @@
                         <?php else: ?>
                             <?php foreach ($accounts as $account): ?>
                                 <tr>
-                                    <td><strong><?= esc($account['account_number']) ?></strong></td>
-                                    <td><?= esc($account['customer_name']) ?></td>
+                                    <td><strong class="text-primary"><?= esc($account['account_number']) ?></strong></td>
+                                    <td><strong><?= esc($account['customer_name']) ?></strong></td>
                                     <td><?= esc($account['email']) ?></td>
-                                    <td><span class="badge bg-info"><?= ucfirst(esc($account['connection_type'])) ?></span></td>
+                                    <td><span class="type-badge"><?= esc(ucfirst($account['connection_type'])) ?></span></td>
                                     <td>
-                                        <?php $badgeClass = 'badge-' . $account['status']; ?>
-                                        <span class="badge <?= $badgeClass ?>"><?= ucfirst(esc($account['status'])) ?></span>
+                                        <?php $status = in_array($account['status'], ['active', 'inactive', 'suspended'], true) ? $account['status'] : 'inactive'; ?>
+                                        <span class="status-badge status-<?= esc($status) ?>"><?= esc(ucfirst($account['status'])) ?></span>
                                     </td>
-                                    <td>
-                                        <a href="<?= base_url('account/' . $account['id']) ?>" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i> View
+                                    <td><div class="account-actions justify-content-end">
+                                        <a href="<?= base_url('account/' . $account['id']) ?>" class="btn btn-sm btn-outline-primary" title="View account">
+                                            <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="<?= base_url('account/edit/' . $account['id']) ?>" class="btn btn-sm btn-outline-warning">
-        <i class="bi bi-pencil"></i> Edit
+                                        <a href="<?= base_url('account/edit/' . $account['id']) ?>" class="btn btn-sm btn-outline-warning" title="Edit account">
+        <i class="fas fa-pen"></i>
     </a>
-    <a href="<?= base_url('account/delete/' . $account['id']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this account?')">
-        <i class="bi bi-trash"></i> Delete
+    <a href="<?= base_url('account/delete/' . $account['id']) ?>" class="btn btn-sm btn-outline-danger" title="Delete account" onclick="return confirm('Are you sure you want to delete this account?')">
+        <i class="fas fa-trash"></i>
     </a>
-                                    </td>
+                                    </div></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -157,12 +162,12 @@
 
             <!-- Pagination -->
             <?php if ($pager): ?>
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="dashboard-pagination d-flex justify-content-between align-items-center mt-3">
                     <div>Showing page <?= $current_page ?> of <?= $pager->getPageCount() ?></div>
                     <div><?= $pager->links() ?></div>
                 </div>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
 </body>
 </html>
