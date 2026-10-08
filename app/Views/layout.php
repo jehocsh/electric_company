@@ -8,7 +8,7 @@
 rel="stylesheet"> 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
 rel="stylesheet"> 
-<link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet"> 
+<link href="<?= base_url('assets/css/custom.css?v=3') ?>" rel="stylesheet">
 <style> 
 :root {
   --primary-color: #1e40af; 
